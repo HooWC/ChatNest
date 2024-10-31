@@ -67,6 +67,10 @@ io.on('connection', (socket) => {
     });
 });
 
+app.get('/health', (req, res) => {
+    res.status(200).send('OK'); // testing
+})
+
 // 启动服务器
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
