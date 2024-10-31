@@ -5,44 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css"> <!-- 可选样式 -->
 </head>
 
 <body>
-    <h1>Chat Room</h1>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" placeholder="Type your message here..." />
-        <button>Send</button>
-    </form>
+    <div class="chat-container">
+        <h1>Chat Room</h1>
+        <div id="message-container">
+            <ul id="messages"></ul>
+        </div>
+        <form id="form" action="">
+            <input id="input" autocomplete="off" placeholder="Type your message here..." /><button>Send</button>
+        </form>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
 
+        // 加载历史消息
+        socket.on('load messages', function (msgs) {
+            msgs.forEach(msg => {
+                const item = document.createElement('li');
+                item.textContent = msg.content; // 使用 msg.content 显示消息
+                messages.appendChild(item);
+            });
+            window.scrollTo(0, document.body.scrollHeight); // 滚动到页面底部
+        });
+
         form.addEventListener('submit', function (e) {
-            e.preventDefault(); // 阻止表单默认提交行为
+            e.preventDefault();
             if (input.value) {
-                socket.emit('chat message', input.value); // 发送消息到服务器
+                // 发送消息到服务器
+                socket.emit('chat message', input.value);
                 input.value = '';
             }
         });
-
-        // 页面加载时获取现有消息并显示
-        fetch('/api/chat')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(msg => {
-                    const item = document.createElement('li');
-                    item.textContent = msg.content; // 显示消息内容
-                    messages.appendChild(item);
-                });
-            })
-            .catch(err => console.error('Error fetching messages:', err));
 
         // 监听服务器发送的消息
         socket.on('chat message', function (msg) {
