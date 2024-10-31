@@ -28,6 +28,10 @@ mongoose.connect(uri, {
         console.error('Database connection error:', err);
     });
 
+app.get('/health', (req, res) => {
+    res.status(200).send('OK'); // testing
+})
+
 // 静态文件服务
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -66,10 +70,6 @@ io.on('connection', (socket) => {
         console.log('A user disconnected');
     });
 });
-
-app.get('/health', (req, res) => {
-    res.status(200).send('OK'); // testing
-})
 
 // 启动服务器
 const PORT = process.env.PORT || 3000;
