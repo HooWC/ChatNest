@@ -11,7 +11,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5x4eq.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
+const DB_NAME = "sample_mflix";
+const DB_USER = "wengchinbusiness";
+const DB_PASS = "OdelKSTJEWDKD27T";
+
+const uri = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.5x4eq.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
